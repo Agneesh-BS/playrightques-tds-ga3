@@ -1,4 +1,5 @@
 from playwright.sync_api import sync_playwright
+import re
 
 urls = [
     "https://sanand0.github.io/tdsdata/seed0.html",
@@ -21,11 +22,16 @@ with sync_playwright() as p:
 
     for url in urls:
         page.goto(url)
-        cells = page.query_selector_all("table td")
-        for c in cells:
-            text = c.inner_text().strip()
-            if text.replace(".", "", 1).isdigit():
-                total += float(text)
+        page.wait_for_load_state("networkidle")
+
+        # get ALL visible text inside tables
+        table_text = page.inner_text("table")
+
+        # extract all numbers (ints + decimals)
+        numbers = re.findall(r"-?\d+\.?\d*", table_text)
+
+        for n in numbers:
+            total += float(n)
 
     browser.close()
 
