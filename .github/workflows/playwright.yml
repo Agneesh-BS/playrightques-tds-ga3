@@ -22,4 +22,4 @@ jobs:
           playwright install
 
       - name: Run scraper 24f1001207@ds.study.iitm.ac.in
-        run: python scrape_sum.py
+        run: python sum_tables.py
