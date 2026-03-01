@@ -1,38 +1,29 @@
 from playwright.sync_api import sync_playwright
 import re
 
-urls = [
-    "https://sanand0.github.io/tdsdata/seed0.html",
-    "https://sanand0.github.io/tdsdata/seed1.html",
-    "https://sanand0.github.io/tdsdata/seed2.html",
-    "https://sanand0.github.io/tdsdata/seed3.html",
-    "https://sanand0.github.io/tdsdata/seed4.html",
-    "https://sanand0.github.io/tdsdata/seed5.html",
-    "https://sanand0.github.io/tdsdata/seed6.html",
-    "https://sanand0.github.io/tdsdata/seed7.html",
-    "https://sanand0.github.io/tdsdata/seed8.html",
-    "https://sanand0.github.io/tdsdata/seed9.html",
-]
-
-total = 0
+seeds = range(10)
+total_sum = 0
 
 with sync_playwright() as p:
-    browser = p.chromium.launch()
+    browser = p.chromium.launch(headless=True)
     page = browser.new_page()
 
-    for url in urls:
+    for seed in seeds:
+        url = f"https://sanand0.github.io/tdsdata/js_table/?seed={seed}"
         page.goto(url)
-        page.wait_for_load_state("networkidle")
 
-        # get ALL visible text inside tables
-        table_text = page.inner_text("table")
+        # wait for tables to load
+        page.wait_for_selector("table")
 
-        # extract all numbers (ints + decimals)
-        numbers = re.findall(r"-?\d+\.?\d*", table_text)
+        # get all text from tables
+        tables_text = page.inner_text("body")
 
-        for n in numbers:
-            total += float(n)
+        # extract numbers
+        nums = re.findall(r"-?\d+", tables_text)
+        nums = [int(n) for n in nums]
+
+        total_sum += sum(nums)
 
     browser.close()
 
-print(f"TOTAL_SUM={total}")
+print("TOTAL SUM:", total_sum)
