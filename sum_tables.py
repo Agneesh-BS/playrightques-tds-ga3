@@ -25,5 +25,4 @@ with sync_playwright() as p:
         total_sum += sum(nums)
 
     browser.close()
-print("24f1001207@ds.study.iitm.ac.in")
-print(f"TOTAL SUM: {total_sum}")
+print(total_sum)
