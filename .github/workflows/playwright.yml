@@ -1,0 +1,20 @@
+name: DataDash QA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 24f1001207@ds.study.iitm.ac.in install deps
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Run scraping
+        run: python sum_tables.py
