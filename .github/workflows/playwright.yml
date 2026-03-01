@@ -1,4 +1,4 @@
-name: DataDash QA
+name: Playwright Scraper
 
 on:
   workflow_dispatch:
@@ -9,12 +9,17 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: 24f1001207@ds.study.iitm.ac.in install deps
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
         run: |
           pip install playwright
-          playwright install chromium
+          playwright install
 
-      - name: Run scraping
-        run: python sum_tables.py
+      - name: Run scraper 24f1001207@ds.study.iitm.ac.in
+        run: python scrape_sum.py
